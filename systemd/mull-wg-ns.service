@@ -1,0 +1,18 @@
+[Unit]
+Description=WireGuard namespace service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+
+ExecStartPre=-ip link delete mullwg-veth0
+ExecStartPre=-ip netns delete mull-wg-ns
+
+ExecStart=/bin/bash /etc/mull-wg/scripts/start_mull_ns.sh
+
+ExecStop=-ip link delete mullwg-veth0
+ExecStop=-ip netns delete mull-wg-ns
+
+[Install]
+WantedBy=multi-user.target
+WantedBy=network-online.target

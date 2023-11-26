@@ -1,0 +1,7 @@
+[Unit]
+Description=Mullvad server list update service
+
+[Service]
+Type=oneshot
+
+ExecStart=python /etc/mull-wg/scripts/fetch_servers.py
