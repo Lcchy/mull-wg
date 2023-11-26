@@ -12,6 +12,7 @@ The wireguard private key is generated locally and never shared.
 
 - Run once: `./install.sh`
 - Route a program through the vpn with `firejail --noprofile --netns=mull-wg-ns example_cmd`
+- Choose a different vpn server by writing its hostname (find them in /etc/mull-wg/servers/<hostname>.conf) into `/etc/mull-wg/loc`
 
 #### Namespace setup:
 
