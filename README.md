@@ -44,3 +44,4 @@ start_mull_ns.sh then assembles the above to setup namespace and connection
 - Wg ns tutorial: https://volatilesystems.org/wireguard-in-a-separate-linux-network-namespace.html
 - Wireguard namespace doc: https://www.wireguard.com/netns/#the-new-namespace-solution
 - Mullvad api: https://api.mullvad.net/app/documentation/
+- Geoclue d-bus access: https://howtotrainyourrobot.com/building-a-mobile-app-for-linux-part-4-gps-mobile-tracking/
