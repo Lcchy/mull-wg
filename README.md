@@ -20,11 +20,11 @@ We initiate the wireguard interface in init (global) namespace and then move it 
 our custom namespace so that it remembers to route through init.
 We then set up the connection via `wg`, wg-quick seems inapropriate because of its own routing setup.
 Debug with:
-sudo ip netns exec mull-wg-ns wg show
-sudo ip netns exec mull-wg-ns ping google.com
+`sudo ip netns exec mull-wg-ns wg show`
+`sudo ip netns exec mull-wg-ns ping google.com`
 
 #### File structure after install:
-In /etc/mullvad-wg:
+In `/etc/mullvad-wg`:
 - key : contains mullvad wg private key for device, root access.
 - device_ip : Assigned Mullvad interface ip for current device, root access.
 - servers/*.conf : mullvad wg server infos, unprotected, set by mull-wg-serv.service
