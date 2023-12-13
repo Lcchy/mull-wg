@@ -1,0 +1,6 @@
+[Path]
+PathModified=/etc/mull-wg/loc
+
+[Install]
+WantedBy=multi-user.target
+WantedBy=network-online.target

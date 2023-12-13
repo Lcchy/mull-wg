@@ -1,0 +1,10 @@
+[Unit]
+Description=WireGuard location config watcher
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/systemctl restart mull-wg-ns.service
+
+[Install]
+WantedBy=multi-user.target
+WantedBy=network-online.target

@@ -47,7 +47,9 @@ systemctl start --user mull-wg-serv.service
 systemctl enable --user --now mull-wg-serv.timer
 
 sudo cp $REPO_DIR/systemd/mull-wg-ns.service /etc/systemd/system/
+sudo cp $REPO_DIR/systemd/mull-wg-watcher.* /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable --now mull-wg-ns.service
+sudo systemctl enable --now mull-wg-watcher.{path,service}
 
 echo "Installation success."
