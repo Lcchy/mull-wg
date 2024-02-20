@@ -31,7 +31,7 @@ echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward
 sudo iptables -t nat -A POSTROUTING -s 10.54.0.0/24 ! -o mullwg-veth0 -j MASQUERADE
 sudo iptables -t nat -A POSTROUTING -s 10.54.0.0/24 ! -o lo -j MASQUERADE
 sudo ip netns exec mull-wg-ns ip route add 100.64.0.0/10 via 10.54.0.1 # tailscale
-sudo ip netns exec mull-wg-ns ip route add 10.0.0.0/8 via 10.54.0.1
+sudo ip netns exec mull-wg-ns ip route add 10.177.0.0/16 via 10.54.0.1 # linode
 sudo ip netns exec mull-wg-ns ip route add 172.16.0.0/12 via 10.54.0.1
 sudo ip netns exec mull-wg-ns ip route add 192.168.0.0/16 via 10.54.0.1
 sudo ip netns exec mull-wg-ns ip route add 127.0.0.0/8 via 10.54.0.1 # =localhost, does not seem to work
