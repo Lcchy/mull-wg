@@ -35,3 +35,22 @@ sudo ip netns exec mull-wg-ns ip route add 10.177.0.0/16 via 10.54.0.1 # linode
 sudo ip netns exec mull-wg-ns ip route add 172.16.0.0/12 via 10.54.0.1
 sudo ip netns exec mull-wg-ns ip route add 192.168.0.0/16 via 10.54.0.1
 sudo ip netns exec mull-wg-ns ip route add 127.0.0.0/8 via 10.54.0.1 # =localhost, does not seem to work
+
+sudo ip link add mull-veth-loc type veth peer name veth-loc-netns
+sudo ip link set veth-loc-netns netns mull-wg-ns
+sudo ip link set mull-veth-loc up
+sudo ip netns exec mull-wg-ns ip link set veth-loc-netns up
+sudo ip addr add 10.55.0.1/24 dev mull-veth-loc
+sudo ip netns exec mull-wg-ns ip addr add 10.55.0.2/24 dev veth-loc-netns
+
+sudo iptables -t nat -A POSTROUTING -s 10.55.0.0/24 -j MASQUERADE
+sudo iptables -t nat -I PREROUTING -s 10.55.0.0/24 -j DNAT --to-destination 127.0.0.1
+
+sudo ip netns exec mull-wg-ns ip route del 127.0.0.0/8 via 10.54.0.1
+sudo ip netns exec mull-wg-ns ip route add 127.0.0.0/8 via 10.55.0.1
+
+sudo ip netns exec mull-wg-ns sysctl -w net.ipv4.conf.veth-loc-netns.route_localnet=1
+sudo sysctl -w net.ipv4.conf.mull-veth-loc.route_localnet=1
+
+# iptables -t nat -A POSTROUTING -m addrtype --src-type LOCAL --dst-type UNICAST -j MASQUERADE
+# sudo ip netns exec iptables -t nat -A OUTPUT -m addrtype --src-type LOCAL --dst-type LOCAL -p tcp -j DNAT --to-destination 10.0.3.10
