@@ -1,20 +1,21 @@
-## Mullvad VPN wireguard setup
+## Mullvad VPN inclusive wireguard split-tunnel via linux namespaces
 
-Disclaimer: This is purely a personal project, use at your own risk.
+Disclaimer: This is a personal project, use at your own risk.
 
 The advantage of this approach is that, once set up, routing a program through
 the vpn can be done without root access. 
-DNS is not set in the namespace so your system DNS will leak through the connection.
-Default Mulllvad server is `de-ber-wg-005`.
+DNS is not set in the namespace so your system DNS will leak through the connection, but this could be configured.
+Default Mullvad serverk is `de-ber-wg-005`.
 The wireguard private key is generated locally and never shared.
 
-#### Usage:
+#### Setup and Usage:
 
-- Run once: `./install.sh`
-- Route a program through the vpn with `firejail --noprofile --netns=mull-wg-ns example_cmd`
-- Choose a different vpn server by writing its hostname (find them in /etc/mull-wg/servers/<hostname>.conf) into `/etc/mull-wg/loc`
+- Generate wireguard keys and configs: `./install.sh`
+- Setup systemd services: `./systemd_setup.sh` or on NixOS: `...`
+- Run a program through the vpn with `firejail --noprofile --netns=mull-wg-ns example_cmd`
+- Choose a different vpn server by writing its hostname (find them as /etc/mull-wg/servers/<hostname>.conf) in `/etc/mull-wg/loc`
 
-#### Namespace setup:
+#### Namespace setup summary:
 
 We initiate the wireguard interface in init (global) namespace and then move it to
 our custom namespace so that it remembers to route through init.
@@ -35,7 +36,6 @@ start_mull_ns.sh then assembles the above to setup namespace and connection
 #### TODO:
 
 - Add script for choosing mullvad server interactively
-- Integrate location script to choose server automatically
 - Look into nsenter to replace firejail
 - Look into speedtests for auto choice of server
 

@@ -1,17 +1,17 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -e
 
-ipv4_adr=$(sudo cat /etc/mull-wg/device_ip | awk -F '[,]' '{print $1}')
-ipv6_adr=$(sudo cat /etc/mull-wg/device_ip | awk -F '[,]' '{print $2}')
-serv_hostname=$(cat /etc/mull-wg/loc)
-serv_conf_path=/etc/mull-wg/servers/$serv_hostname.conf
+ipv4_adr=$(sudo cat $HOME/.config/mull-wg/device_ip | awk -F '[,]' '{print $1}')
+ipv6_adr=$(sudo cat $HOME/.config/mull-wg/device_ip | awk -F '[,]' '{print $2}')
+serv_hostname=$(cat $HOME/.config/mull-wg/loc)
+serv_conf_path=$HOME/.config/mull-wg/servers/$serv_hostname.conf
 serv_pubkey=$(sudo sed -n "2p" "$serv_conf_path")
 serv_addr=$(sudo sed -n "3p" "$serv_conf_path")
 
 sudo ip netns add mull-wg-ns
 sudo ip link add mull-wg type wireguard
-sudo wg set mull-wg private-key /etc/mull-wg/key
+sudo wg set mull-wg private-key $HOME/.config/mull-wg/key
 sudo wg set mull-wg peer $serv_pubkey allowed-ips 0.0.0.0/0,::0/0
 sudo wg set mull-wg peer $serv_pubkey endpoint $serv_addr
 sudo ip link set mull-wg netns mull-wg-ns

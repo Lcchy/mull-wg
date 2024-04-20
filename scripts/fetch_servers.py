@@ -1,6 +1,7 @@
 import requests
+import sys
 
-mull_conf_path = "/etc/mull-wg/servers/"
+mull_conf_path = "sys.argv[1]/.config/mull-wg/servers/"
 
 # Fetch server locations from Mullvad API
 mullvad_response = requests.get("https://api.mullvad.net/public/relays/wireguard/v2")

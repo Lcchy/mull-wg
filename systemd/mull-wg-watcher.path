@@ -1,5 +1,5 @@
 [Path]
-PathModified=/etc/mull-wg/loc
+PathModified=%h/.config/mull-wg/loc
 
 [Install]
 WantedBy=multi-user.target
