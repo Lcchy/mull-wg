@@ -1,6 +1,12 @@
 { config, lib, pkgs, ... }:
 
+
+let
+mullWgPythonEnv = pkgs.python3.withPackages (ps: with ps; [
+  requests
+]); in
 {
+
  options.services.mull-wg = {
     enable = lib.mkEnableOption "Enable Mull WG service";
  };
@@ -12,14 +18,15 @@
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = "yes";
+        Environment = "PATH=/run/current-system/sw/bin/";
         ExecStartPre = [
-          "-ip link delete mullwg-veth0"
-          "-ip netns delete mull-wg-ns"
+          "-${pkgs.iproute2}/bin/ip link delete mullwg-veth0"
+          "-${pkgs.iproute2}/bin/ip netns delete mull-wg-ns"
         ];
-        ExecStart = "bash %h/.config/mull-wg/scripts/start_mull_ns.sh";
+        ExecStart = "${pkgs.bash}/bin/bash /var/mull-wg/scripts/start_mull_ns.sh";
         ExecStop = [
-          "-ip link delete mullwg-veth0"
-          "-ip netns delete mull-wg-ns"
+          "-${pkgs.iproute2}/bin/ip link delete mullwg-veth0"
+          "-${pkgs.iproute2}/bin/ip netns delete mull-wg-ns"
         ];
       };
     };
@@ -28,7 +35,7 @@
       description = "Mullvad server list update service";
       serviceConfig = {
         Type = "oneshot";
-        ExecStart = "python3 %h/.config/mull-wg/scripts/fetch_servers.py";
+        ExecStart = "${mullWgPythonEnv}/bin/python3 /var/mull-wg/scripts/fetch_servers.py";
       };
     };
     systemd.user.timers.mull-wg-serv = {
@@ -44,7 +51,7 @@
     systemd.paths.mull-wg-watcher = {
       description = "WireGuard location config watcher";
       pathConfig = {
-        PathChanged = "%h/.config/mull-wg/loc";
+        PathChanged = "/var/mull-wg/loc";
       };
       wantedBy = [ "multi-user.target" "network-online.target" ];
     };

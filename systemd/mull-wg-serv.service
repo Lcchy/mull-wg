@@ -4,4 +4,4 @@ Description=Mullvad server list update service
 [Service]
 Type=oneshot
 
-ExecStart=python3 %h/.config/var/mull-wg/scripts/fetch_servers.py %h
+ExecStart=python3 /var/mull-wg/scripts/fetch_servers.py
