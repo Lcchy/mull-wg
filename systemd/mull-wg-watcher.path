@@ -1,5 +1,5 @@
 [Path]
-PathModified=/var/mull-wg/loc
+PathModified=/var/tmp/mull-wg/loc
 
 [Install]
 WantedBy=multi-user.target

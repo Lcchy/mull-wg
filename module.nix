@@ -12,6 +12,28 @@ mullWgPythonEnv = pkgs.python3.withPackages (ps: with ps; [
  };
 
  config = lib.mkIf config.services.mull-wg.enable {
+
+      systemd.user.services.mull-wg-serv = {
+      description = "Mullvad server list update service";
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStartPre = [
+          "mkdir -p /var/tmp/mull-wg/servers"
+          "chown -R %u:users /var/tmp/mull-wg/servers"
+        ];
+        ExecStart = "${mullWgPythonEnv}/bin/python3 /var/mull-wg/scripts/fetch_servers.py";
+      };
+    };
+    systemd.user.timers.mull-wg-serv = {
+      description = "Mullvad server list update service";
+      wantedBy = [ "timers.target" ];
+      timerConfig = {
+        OnCalendar = "daily";
+        Persistent = true;
+        Unit = "mull-wg-serv.service";
+      };
+    };
+
     systemd.services.mull-wg-ns = {
       description = "WireGuard namespace service";
       wantedBy = [ "multi-user.target" "network-online.target" ];
@@ -28,23 +50,6 @@ mullWgPythonEnv = pkgs.python3.withPackages (ps: with ps; [
           "-${pkgs.iproute2}/bin/ip link delete mullwg-veth0"
           "-${pkgs.iproute2}/bin/ip netns delete mull-wg-ns"
         ];
-      };
-    };
-
-    systemd.user.services.mull-wg-serv = {
-      description = "Mullvad server list update service";
-      serviceConfig = {
-        Type = "oneshot";
-        ExecStart = "${mullWgPythonEnv}/bin/python3 /var/mull-wg/scripts/fetch_servers.py";
-      };
-    };
-    systemd.user.timers.mull-wg-serv = {
-      description = "Mullvad server list update service";
-      wantedBy = [ "timers.target" ];
-      timerConfig = {
-        OnCalendar = "daily";
-        Persistent = true;
-        Unit = "mull-wg-serv.service";
       };
     };
 

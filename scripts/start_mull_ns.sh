@@ -2,16 +2,21 @@
 
 set -e
 
-ipv4_adr=$(cat /var/mull-wg/device_ip | awk -F '[,]' '{print $1}')
-ipv6_adr=$(cat /var/mull-wg/device_ip | awk -F '[,]' '{print $2}')
-serv_hostname=$(cat /var/mull-wg/loc)
-serv_conf_path=/var/mull-wg/servers/$serv_hostname.conf
+if [ ! -f "/var/tmp/mull-wg/device_ip" ]; then
+    echo "No login found."
+    return 1
+fi
+
+ipv4_adr=$(cat /var/tmp/mull-wg/device_ip | awk -F '[,]' '{print $1}')
+ipv6_adr=$(cat /var/tmp/mull-wg/device_ip | awk -F '[,]' '{print $2}')
+serv_hostname=$(cat /var/tmp/mull-wg/loc)
+serv_conf_path=/var/tmp/mull-wg/servers/$serv_hostname.conf
 serv_pubkey=$(sed -n "2p" "$serv_conf_path")
 serv_addr=$(sed -n "3p" "$serv_conf_path")
 
 ip netns add mull-wg-ns
 ip link add mull-wg type wireguard
-wg set mull-wg private-key /var/mull-wg/key
+wg set mull-wg private-key /var/tmp/mull-wg/key
 wg set mull-wg peer $serv_pubkey allowed-ips 0.0.0.0/0,::0/0
 wg set mull-wg peer $serv_pubkey endpoint $serv_addr
 ip link set mull-wg netns mull-wg-ns

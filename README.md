@@ -8,14 +8,20 @@ DNS is not set in the namespace so your system DNS will leak through the connect
 Default Mullvad server is `de-ber-wg-005`.
 The wireguard private key is generated locally and never shared.
 
-#### Setup and Usage:
+#### Install (NixOS):
 
-- Generate wireguard keys and configs: `./install.sh`
-- Setup systemd services:
-    - On Fedora (or others, untested): `./systemd_setup.sh`
-    - On NixOS, import the `module.nix` in your config (https://nixos.wiki/wiki/NixOS_modules)
+- Import the derivation from `default.nix` and add to systemPackages
+- Import `module.nix` in your config and enable it (https://nixos.wiki/wiki/NixOS_modules)
+
+#### Install (standard way):
+
+- Install scripts and services: `./install.sh`
+
+#### Usage:
+
+- Generate wireguard key and register it with Mullvad: `./login.sh`
 - Run a program through the vpn with `firejail --noprofile --netns=mull-wg-ns example_cmd`
-- Choose a different vpn server by writing its hostname (find them as /etc/mull-wg/servers/<hostname>.conf) in `/etc/mull-wg/loc`. The systemd filesystem watcher will reload the namespace accordingly.
+- Choose a different vpn server by writing its hostname (find them as /var/tmp/mull-wg/servers/<hostname>.conf) in `/var/tmp/mull-wg/loc`. The systemd filesystem watcher will reload the namespace accordingly.
 
 #### Namespace setup summary:
 
@@ -27,7 +33,7 @@ Debug with:
 `sudo ip netns exec mull-wg-ns ping wireguard.com`
 
 #### File structure after install:
-In `/var/mullvad-wg`:
+In `/var/tmp/mullvad-wg`:
 - key : contains mullvad wg private key for device, root access.
 - device_ip : Assigned Mullvad interface ip for current device, root access.
 - servers/*.conf : mullvad wg server infos, unprotected, set by mull-wg-serv.service
@@ -39,7 +45,6 @@ start_mull_ns.sh then assembles the above to setup the namespace and connection
 
 - Look into nsenter to replace firejail
 - Look into speedtests for server choice
-- Make NixOs install more idiomatic
 
 #### Useful links:
 
