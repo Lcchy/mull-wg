@@ -1,4 +1,5 @@
-with import <nixpkgs> {};
+#with import <nixpkgs> {}; # this is impure in flakes
+{ pkgs }:
 
 pkgs.stdenv.mkDerivation rec {
 
