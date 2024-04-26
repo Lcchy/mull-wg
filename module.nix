@@ -1,12 +1,6 @@
 { config, lib, pkgs, ... }:
 
-
-let
-mullWgPythonEnv = pkgs.python3.withPackages (ps: with ps; [
-  requests
-]); in
 {
-
  options.services.mull-wg = {
     enable = lib.mkEnableOption "Enable Mull WG service";
  };
@@ -21,7 +15,7 @@ mullWgPythonEnv = pkgs.python3.withPackages (ps: with ps; [
           "mkdir -p /var/tmp/mull-wg/servers"
           "chown -R %u:users /var/tmp/mull-wg/servers"
         ];
-        ExecStart = "${mullWgPythonEnv}/bin/python3 /var/mull-wg/scripts/fetch_servers.py";
+        ExecStart = "${pkgs.mull-wg-fetch-servers}";
       };
     };
     systemd.user.timers.mull-wg-serv = {
@@ -40,12 +34,11 @@ mullWgPythonEnv = pkgs.python3.withPackages (ps: with ps; [
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = "yes";
-        Environment = "PATH=/run/current-system/sw/bin/";
         ExecStartPre = [
           "-${pkgs.iproute2}/bin/ip link delete mullwg-veth0"
           "-${pkgs.iproute2}/bin/ip netns delete mull-wg-ns"
         ];
-        ExecStart = "${pkgs.bash}/bin/bash /var/mull-wg/scripts/start_mull_ns.sh";
+        ExecStart = "${pkgs.mull-wg-start-ns}";
         ExecStop = [
           "-${pkgs.iproute2}/bin/ip link delete mullwg-veth0"
           "-${pkgs.iproute2}/bin/ip netns delete mull-wg-ns"
@@ -56,7 +49,7 @@ mullWgPythonEnv = pkgs.python3.withPackages (ps: with ps; [
     systemd.paths.mull-wg-watcher = {
       description = "WireGuard location config watcher";
       pathConfig = {
-        PathChanged = "/var/mull-wg/loc";
+        PathChanged = "/var//tmp/mull-wg/loc";
       };
       wantedBy = [ "multi-user.target" "network-online.target" ];
     };
