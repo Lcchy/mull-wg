@@ -4,7 +4,7 @@ set -e
 
 if [ ! -f "/var/tmp/mull-wg/device_ip" ]; then
     echo "No login found."
-    return 1
+    exit 1
 fi
 
 ipv4_adr=$(cat /var/tmp/mull-wg/device_ip | awk -F '[,]' '{print $1}')

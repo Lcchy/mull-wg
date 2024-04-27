@@ -51,7 +51,7 @@ in
     systemd.paths.mull-wg-watcher = {
       description = "WireGuard location config watcher";
       pathConfig = {
-        PathChanged = "/var//tmp/mull-wg/loc";
+        PathChanged = "/var/tmp/mull-wg/loc";
       };
       wantedBy = [ "multi-user.target" "network-online.target" ];
     };
