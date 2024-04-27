@@ -14,8 +14,8 @@ in
       serviceConfig = {
         Type = "oneshot";
         ExecStartPre = [
-          "mkdir -p /var/tmp/mull-wg/servers"
-          "chown -R %u:users /var/tmp/mull-wg/servers"
+          "${pkgs.coreutils}/bin/mkdir -p /var/tmp/mull-wg/servers"
+          "${pkgs.coreutils}/bin/chown -R %u:users /var/tmp/mull-wg/servers"
         ];
         ExecStart = "${mull-wg}/bin/mull-wg-fetch-servers";
       };
@@ -33,6 +33,7 @@ in
     systemd.services.mull-wg-ns = {
       description = "WireGuard namespace service";
       wantedBy = [ "multi-user.target" "network-online.target" ];
+      path = [ pkgs.gawk pkgs.iproute2 pkgs.wireguard-tools pkgs.iptables ];
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = "yes";
