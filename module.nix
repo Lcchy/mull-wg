@@ -1,5 +1,7 @@
 { config, lib, pkgs, ... }:
-
+let 
+  mull-wg = pkgs.callPackage ./default.nix {};
+in 
 {
  options.services.mull-wg = {
     enable = lib.mkEnableOption "Enable Mull WG service";
@@ -15,7 +17,7 @@
           "mkdir -p /var/tmp/mull-wg/servers"
           "chown -R %u:users /var/tmp/mull-wg/servers"
         ];
-        ExecStart = "${pkgs.mull-wg-fetch-servers}";
+        ExecStart = "${mull-wg}/bin/mull-wg-fetch-servers";
       };
     };
     systemd.user.timers.mull-wg-serv = {
@@ -38,7 +40,7 @@
           "-${pkgs.iproute2}/bin/ip link delete mullwg-veth0"
           "-${pkgs.iproute2}/bin/ip netns delete mull-wg-ns"
         ];
-        ExecStart = "${pkgs.mull-wg-start-ns}";
+        ExecStart = "${mull-wg}/bin/mull-wg-start-ns";
         ExecStop = [
           "-${pkgs.iproute2}/bin/ip link delete mullwg-veth0"
           "-${pkgs.iproute2}/bin/ip netns delete mull-wg-ns"
