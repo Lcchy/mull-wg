@@ -3,6 +3,7 @@ set -e
 
 ### Mullvad secrets
 if ! [ -f /var/tmp/mull-wg/device_ip ]; then
+    mkdir -p /var/tmp/mull-wg
     sudo touch /var/tmp/mull-wg/key
     sudo chmod 600 /var/tmp/mull-wg/key
     wg genkey | sudo tee /var/tmp/mull-wg/key 1> /dev/null
