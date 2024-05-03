@@ -15,8 +15,9 @@ pkgs.stdenv.mkDerivation rec {
 
  installPhase = ''
     mkdir -p $out/bin
-    cp $src/scripts/start_mull_ns.sh $out/bin/mull-wg-start-ns
     cp $src/scripts/fetch_servers.py $out/bin/mull-wg-fetch-servers
+    cp $src/scripts/start_mull_ns.sh $out/bin/mull-wg-start-ns
+    cp $src/scripts/connect_wg.sh $out/bin/mull-wg-connect
     cp $src/login.sh $out/bin/mull-wg-login
  '';
 }
