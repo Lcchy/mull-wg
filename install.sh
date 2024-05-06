@@ -4,10 +4,12 @@ set -e
 cd "$(dirname "$0")"
 REPO_DIR="$(pwd)"
 
-mkdir -p /var/tmp/mull-wg/scripts
-cp $REPO_DIR/scripts/* /var/tmp/mull-wg/scripts/
-chmod 644 /var/tmp/mull-wg/scripts/*
-chown -R root:root /var/tmp/mull-wg/scripts
+sudo cp -r $REPO_DIR/scripts/ /var/tmp/mull-wg/
+sudo chmod 644 /var/tmp/mull-wg/scripts/*
+sudo chown -R root:root /var/tmp/mull-wg/scripts
+
+mkdir -p /var/tmp/mull-wg/servers
+sudo chown -R lcchy:users /var/tmp/mull-wg/servers
 
 # Services
 cp $REPO_DIR/systemd/mull-wg-serv.service ~/.config/systemd/user/

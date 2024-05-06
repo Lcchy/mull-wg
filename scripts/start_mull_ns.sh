@@ -32,7 +32,7 @@ ip link set mullwg-veth0 up
 ip netns exec mull-wg-ns ip link set veth1 up
 ip addr add 10.54.0.1/24 dev mullwg-veth0
 ip netns exec mull-wg-ns ip addr add 10.54.0.2/24 dev veth1
-echo 1 | tee /proc/sys/net/ipv4/ip_forward
+echo 1 | tee /proc/sys/net/ipv4/ip_forward 1> /dev/null
 iptables -t nat -A POSTROUTING -s 10.54.0.0/24 ! -o mullwg-veth0 -j MASQUERADE
 iptables -t nat -A POSTROUTING -s 10.54.0.0/24 ! -o lo -j MASQUERADE
 ip netns exec mull-wg-ns ip route add 100.64.0.0/10 via 10.54.0.1 # tailscale
