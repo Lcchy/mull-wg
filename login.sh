@@ -29,6 +29,13 @@ if ! [ -f /var/tmp/mull-wg/device_ip ]; then
     sudo chmod 644 /var/tmp/mull-wg/loc
     echo "de-ber-wg-005" > /var/tmp/mull-wg/loc
 
+    echo "Setting standard local IP ranges to bypass VPN. Edit them in /var/tmp/bypass"
+    cat <<EOF > /var/tmp/mull-wg/bypass
+    10.0.0.0/8
+    172.16.0.0/12
+    192.168.0.0/16
+    EOF
+
     echo "Success!"
 else
     echo "Already found some login in /var/tmp/mull-wg/device_ip . Delete it to relogin."

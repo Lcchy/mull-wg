@@ -22,11 +22,4 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now mull-wg-ns.service
 sudo systemctl enable --now mull-wg-watcher.{path,service}
 
-echo "Setting standard local IP ranges to bypass VPN. Edit them in /var/tmp/bypass"
-cat <<EOF > /var/tmp/mull-wg/bypass
-10.0.0.0/8
-172.16.0.0/12
-192.168.0.0/16
-EOF
-
 echo "Installation success."
