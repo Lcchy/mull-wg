@@ -18,6 +18,8 @@ ip -n mull-wg-ns addr add $ipv6_adr dev mull-wg
 
 # Create virtual lan tunnel out of namespace to init in order to circumvent the vpn for local traffic
 ip link add mullwg-veth0 type veth peer name veth1
+ip li set mtu 1200 dev mullwg-veth0
+ip li set mtu 1200 dev veth1
 ip link set veth1 netns mull-wg-ns
 ip link set mullwg-veth0 up
 ip netns exec mull-wg-ns ip link set veth1 up
@@ -29,3 +31,4 @@ iptables -t nat -A POSTROUTING -s 10.54.0.0/24 ! -o lo -j MASQUERADE
 
 # Route private IPs through the veth bridge into the host netns
 cat /var/tmp/mull-wg/bypass | xargs -I {} ip netns exec mull-wg-ns ip route add {} via 10.54.0.1
+ip -n mull-wg-ns li set mtu 1200 dev mull-wg
