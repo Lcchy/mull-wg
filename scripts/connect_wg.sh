@@ -15,5 +15,4 @@ serv_addr=$(sed -n "3p" "$serv_conf_path")
 # Remove all previous peers
 ip netns exec mull-wg-ns wg show mull-wg peers | awk '{print $1}' | xargs -I {} ip netns exec mull-wg-ns wg set mull-wg peer {} remove
 
-ip netns exec mull-wg-ns wg set mull-wg peer $serv_pubkey allowed-ips 0.0.0.0/0,::0/0
-ip netns exec mull-wg-ns wg set mull-wg peer $serv_pubkey endpoint $serv_addr
+ip netns exec mull-wg-ns wg set mull-wg peer $serv_pubkey allowed-ips 0.0.0.0/0,::0/0 endpoint $serv_addr persistent-keepalive 25
