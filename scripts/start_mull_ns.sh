@@ -2,6 +2,10 @@
 
 set -e
 
+# Set DNS to the connected mullvad server
+mkdir -p /etc/netns/mull-wg-ns
+echo "nameserver 10.64.0.1" > /etc/netns/mull-wg-ns/resolv.conf
+
 # Create wg interface and move it to its namespace
 ip netns add mull-wg-ns
 ip link add mull-wg type wireguard
@@ -31,4 +35,6 @@ iptables -t nat -A POSTROUTING -s 10.54.0.0/24 ! -o lo -j MASQUERADE
 
 # Route private IPs through the veth bridge into the host netns
 cat /var/tmp/mull-wg/bypass | xargs -I {} ip netns exec mull-wg-ns ip route add {} via 10.54.0.1
+# Exclude the mullvad server to enable DNS and SOCKS5
+ip netns exec mull-wg-ns ip route add 10.64.0.1 via $(echo $ipv4_adr | awk -F'/' '{print $1}')
 ip -n mull-wg-ns li set mtu 1200 dev mull-wg

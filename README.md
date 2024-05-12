@@ -4,7 +4,7 @@ Disclaimer: This is a personal project, use at your own risk.
 
 The advantage of this approach is that, once set up, routing a program through
 the vpn can be done without root access.
-DNS is not set in the namespace so your system DNS will leak through the connection, but this can be configured.
+DNS requests go to the connected Mullvad server
 Default Mullvad server is `de-ber-wg-005`.
 The wireguard private key is generated locally and never shared.
 
