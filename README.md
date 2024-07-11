@@ -1,3 +1,5 @@
+ARCHIVED: integrated into dotfiles nixOS configuration.
+
 ## Mullvad VPN wireguard split-tunnel via linux namespaces
 
 Disclaimer: This is a personal project, use at your own risk.
